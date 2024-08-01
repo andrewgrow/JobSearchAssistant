@@ -16,10 +16,10 @@ api = Linkedin(username=username, password=password)
 # api = Linkedin(username, password)
 
 # Job Search Options
-keywords = "medical"  # Software Engineer
-# 103883259 - Austria, 105072130 - Poland, 107144641 - Vienna, 102974008 - Estonia
-location_geo_id = "102974008"  # you can take it from the search page in linkedin, look to "geoId" in URL
-limit = 100  # -1 max 1000
+keywords = "React"  # Software Engineer
+# e.g. 103883259 - Austria, 105072130 - Poland, 107144641 - Vienna, 102974008 - Estonia
+location_geo_id = "105072130"  # you can take it from the search page in linkedin, look to "geoId" in URL
+limit = 5  # -1 max 1000
 
 # Start time for job search (last 24 hours)
 # listed_at = 24 * 60 * 60

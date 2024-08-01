@@ -29,8 +29,8 @@ with open('results.txt', 'w', encoding='utf-8') as result_file:
         completion = client.chat.completions.create(
           model="gpt-4o-mini",
           messages=[
-            {"role": "system", "content": "Your role is a vacancy analyzer. Respond with 'yes' if the job is fully suitable for a medical representative, otherwise respond with 'no'."},
-            {"role": "user", "content": f"Is this vacancy suitable for a medical representative? Yes or no?\n\n{description}"}
+            {"role": "system", "content": "Your role is a vacancy analyzer. Respond with 'yes' if the job is fully suitable for a React Developer, otherwise respond with 'no'."},
+            {"role": "user", "content": f"Is this vacancy suitable for a React Software Developer? Yes or no?\n\n{description}"}
           ],
           max_tokens=3
         )
