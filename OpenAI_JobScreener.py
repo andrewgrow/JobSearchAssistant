@@ -3,6 +3,7 @@ import time
 from openai import OpenAI
 from dotenv import load_dotenv
 import os
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # load dotenv variables
 load_dotenv()
@@ -15,7 +16,7 @@ def extract_listings(json_file):
         return listing
 
 
-client = OpenAI(
+openAiClient = OpenAI(
   api_key=os.getenv("OPENAI_API_KEY"),
 )
 
@@ -24,21 +25,38 @@ listings = extract_listings(json_filename)
 
 start_time = time.time()
 
-with open('results.txt', 'w', encoding='utf-8') as result_file:
-    for title, description, url in listings:
-        completion = client.chat.completions.create(
-          model="gpt-4o-mini",
-          messages=[
-            {"role": "system", "content": "Your role is a vacancy analyzer. Respond with 'yes' if the job is fully suitable for a React Developer, otherwise respond with 'no'."},
-            {"role": "user", "content": f"Is this vacancy suitable for a React Software Developer? Yes or no?\n\n{description}"}
-          ],
-          max_tokens=3
-        )
+jobPosition = "Android Developer"
 
-        response = completion.choices[0].message.content.strip().lower()
-        # We write the result to the file only if the answer is "yes"
-        if response == 'yes':
-            result_file.write(f"{title} - {url}\n")
+
+def analyze_listing(client, title, description, url):
+    completion = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "system",
+             "content": "You help me find vacancies for "
+                        f"{jobPosition}" +
+                        ". Respond with 'yes' if the job is suitable, otherwise respond with 'no'. " +
+                        "Answer is limited to 3 characters."},
+            {"role": "user",
+             "content": f"Is this job opening suitable for "+
+                        f"{jobPosition}?\n\n{description}"}
+        ],
+        max_tokens=3
+    )
+    response = completion.choices[0].message.content.strip().lower()
+    if response == 'yes':
+        return f"{title} - {url}\n"
+    return None
+
+
+with open('results.txt', 'w', encoding='utf-8') as file, ThreadPoolExecutor(max_workers=10) as executor:
+    futures = [executor.submit(analyze_listing, openAiClient, title, description, url) for title, description, url in
+               listings]
+
+    for future in as_completed(futures):
+        result = future.result()
+        if result:
+            file.write(result)
 
 end_time = time.time()
 execution_time = end_time - start_time

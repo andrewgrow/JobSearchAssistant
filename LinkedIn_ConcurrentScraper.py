@@ -16,7 +16,7 @@ api = Linkedin(username=username, password=password)
 # api = Linkedin(username, password)
 
 # Job Search Options
-keywords = "React"  # Software Engineer
+keywords = "Android"  # Software Engineer
 # e.g. 103883259 - Austria, 105072130 - Poland, 107144641 - Vienna, 102974008 - Estonia
 location_geo_id = "105072130"  # you can take it from the search page in LinkedIn, look to "geoId" in URL
 limit = 100  # -1 max 1000
