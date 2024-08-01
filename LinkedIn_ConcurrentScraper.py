@@ -18,13 +18,14 @@ api = Linkedin(username=username, password=password)
 # Job Search Options
 keywords = "React"  # Software Engineer
 # e.g. 103883259 - Austria, 105072130 - Poland, 107144641 - Vienna, 102974008 - Estonia
-location_geo_id = "105072130"  # you can take it from the search page in linkedin, look to "geoId" in URL
-limit = 5  # -1 max 1000
+location_geo_id = "105072130"  # you can take it from the search page in LinkedIn, look to "geoId" in URL
+limit = 100  # -1 max 1000
+is_EU_vacancies_ignored = True  # Set False to add EU vacancies to the result, otherwise only your location will be used
 
 # Start time for job search (last 24 hours)
-# listed_at = 24 * 60 * 60
+listed_at = 60 * 60 * 24
 # one month
-listed_at = 24 * 60 * 60 * 30 * 1
+# listed_at = 60 * 60 * 24 * 30 * 1
 
 lock = threading.Lock()
 job_numbers = []
@@ -62,13 +63,16 @@ def get_job_details():
 
         job_details = api.get_job(tracking_number)
         formatted_location = job_details['formattedLocation']
-        if formatted_location == "European Union" or formatted_location == "EMEA":
-            continue
-
         job_description = job_details['description']['text']
         job_title = job_details['title']
         job_posting_id = job_details['entityUrn'].split(':')[-1]
         job_url = f"https://www.linkedin.com/jobs/view/{job_posting_id}"
+
+        is_eu_vacancy = formatted_location == "European Union" or formatted_location == "EMEA"
+
+        if is_EU_vacancies_ignored and is_eu_vacancy:
+            print(f"Job {job_title} has location `European Union` so it won't added to the result list. Link: {job_url}")
+            continue
 
         job_info = {
             'title': job_title,

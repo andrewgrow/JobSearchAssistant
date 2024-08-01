@@ -35,10 +35,14 @@
 
 # Patch the LinkedIn API Library to Add Search by Location Ability (geoId):
 
-1. Open the file `LinkedIn_ConcurrentScraper.py` and locate the line with the text `result = api.search_jobs(`. 
+1. Open the file `LinkedIn_ConcurrentScraper.py` and locate the line with the text `result = api.search_jobs(`.
+
    ![](./images/patch_linkedin_py_1.png)
+
 2. Press and hold the `CTRL` key and click on `search_jobs`. This will take you to the file in the library directory:
+
    ![](./images/patch_linkedin_py_2.jpg)
+
 3. In your file manager, replace the file `linkedin.py` with the updated file from this project.
 
 # Tuning:
@@ -46,11 +50,18 @@
 To find jobs, you need to configure your location, search key, and the number of vacancies (limit) you want to retrieve (maximum 1000 (-1)), as well as set GPT commands.
 
 1. Find the location: Open the LinkedIn search page and perform a search, e.g., `React` `Poland`.
+
    ![](./images/jobs_search_1.png)
+
 2. Set the location you found: Extract the `geoId` number from the URL and set it in `LinkedIn_ConcurrentScraper.py` in the `location_geo_id` field.
+	
+	**Note:** Some vacancies have the location `European Union`, which might cover your location. By default, the scraper will ignore these vacancies, but you can always redefine the flag `is_EU_vacancies_ignored = True` to `False`, and these vacancies will be included in the result file.  	
+
 3. Set your search key, e.g., `React`, in `LinkedIn_ConcurrentScraper.py` in the `keywords` field.
 4. Set your vacancies limit for searching, e.g., 5 (maximum 1000 (-1)).
+
    ![](./images/jobs_search_2.png)
+
 5. Configure GPT commands in the file `OpenAI_JobScreener.py`:
 
    5.1. System Role command context: Define the context that the system should know before your request. For example: `"Your role is a vacancy analyzer. Respond with 'yes' if the job is fully suitable for a React Developer; otherwise, respond with 'no'."`
@@ -58,6 +69,7 @@ To find jobs, you need to configure your location, search key, and the number of
    5.2. Request context: This will be sent with each vacancy in the User Role Content. For example: `f"Is this vacancy suitable for a React Software Developer? Yes or no?\n\n{description}"`
 
    5.3. Do not delete the literal `n` before the User Role Content; it is part of the system command as well.
+
    ![](./images/jobs_search_3.png)
 
 # Running:
