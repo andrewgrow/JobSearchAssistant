@@ -17,15 +17,19 @@ api = Linkedin(username=username, password=password)
 
 # Job Search Options
 keywords = "Android"  # Software Engineer
-# e.g. 103883259 - Austria, 105072130 - Poland, 107144641 - Vienna, 102974008 - Estonia
-location_geo_id = "105072130"  # you can take it from the search page in LinkedIn, look to "geoId" in URL
-limit = 100  # -1 max 1000
+# e.g. 103883259 - Austria, 105072130 - Poland, 107144641 - Vienna, 102974008 - Estonia, 103263110 - Cracow
+location_geo_id = "103883259"  # you can take it from the search page in LinkedIn, look to "geoId" in URL
+limit = 1000  # -1 max 1000
 is_EU_vacancies_ignored = True  # Set False to add EU vacancies to the result, otherwise only your location will be used
 
 # Start time for job search (last 24 hours)
-listed_at = 60 * 60 * 24
+# listed_at = 60 * 60 * 24
+# Start time for job search (last 3 days)
+listed_at = 60 * 60 * 24 * 30 * 3
 # one month
 # listed_at = 60 * 60 * 24 * 30 * 1
+# three month
+# listed_at = 60 * 60 * 24 * 30 * 3
 
 lock = threading.Lock()
 job_numbers = []
